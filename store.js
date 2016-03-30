@@ -1,9 +1,16 @@
+/**
+ * 本地存储，优先使用 sessionStorage
+ *
+ * by djh
+ * */
+
 var store = (function () {
     var api               = {},
         win               = window,
         doc               = win.document,
         localStorageName  = 'localStorage',
         globalStorageName = 'globalStorage',
+        sessionStorageName= 'sessionStorage',
         storage;
 
     api.set    = function (key, value) {};
@@ -11,7 +18,14 @@ var store = (function () {
     api.remove = function (key)        {};
     api.clear  = function ()           {};
 
-    if (localStorageName in win && win[localStorageName]) {
+    if(sessionStorageName in win && win[sessionStorageName]){
+        storage    = win[sessionStorageName];
+        api.set    = function (key, val) {storage.setItem(key, val)};
+        api.get    = function (key)      {return storage.getItem(key)};
+        api.remove = function (key)      {storage.removeItem(key)};
+        api.clear  = function()          {storage.clear()};
+
+    } else if (localStorageName in win && win[localStorageName]) {
         storage    = win[localStorageName];
         api.set    = function (key, val) { storage.setItem(key, val) };
         api.get    = function (key)      { return storage.getItem(key) };
@@ -49,10 +63,10 @@ var store = (function () {
             var storage = getStorage();
             storage.removeAttribute(key);
             storage.save(localStorageName);
-        }
+        };
         api.clear = function () {
             var storage = getStorage();
-            var attributes = storage.XMLDocument.documentElement.attributes;;
+            var attributes = storage.XMLDocument.documentElement.attributes;
             storage.load(localStorageName);
             for (var i=0, attr; attr = attributes[i]; i++) {
                 storage.removeAttribute(attr.name);
