@@ -1,6 +1,6 @@
 /**
  * 本地存储，优先使用 sessionStorage
- *
+ * 在sessionSorage ，会话存储中相当好用，但是本地存储不能跟cookie相比，因为ie不兼容localStorage
  * by djh
  * */
 
